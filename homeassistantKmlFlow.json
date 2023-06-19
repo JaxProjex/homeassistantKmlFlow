@@ -1,0 +1,408 @@
+[
+    {
+        "id": "60fff77379400453",
+        "type": "tab",
+        "label": "homeassistantKmlFlow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6f55a413ca9976f3",
+        "type": "http request",
+        "z": "60fff77379400453",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8123/api/states",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "9b94a63d1225f861"
+            ]
+        ]
+    },
+    {
+        "id": "df5b4fa2c94a8db8",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug sort",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "9b94a63d1225f861",
+        "type": "json",
+        "z": "60fff77379400453",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 550,
+        "y": 240,
+        "wires": [
+            [
+                "60dfe0c528cad59e",
+                "7ded90ff64038547"
+            ]
+        ]
+    },
+    {
+        "id": "5b6004a7715e5933",
+        "type": "http in",
+        "z": "60fff77379400453",
+        "name": "",
+        "url": "/homeassistant.kml",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "6f55a413ca9976f3",
+                "9bb38703b4d2b6a5"
+            ]
+        ]
+    },
+    {
+        "id": "2a8f5ff2e0c6249e",
+        "type": "join",
+        "z": "60fff77379400453",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "payload",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 1390,
+        "y": 320,
+        "wires": [
+            [
+                "e508ca6b59227446",
+                "97fa85ec3550632f"
+            ]
+        ]
+    },
+    {
+        "id": "9bb38703b4d2b6a5",
+        "type": "template",
+        "z": "60fff77379400453",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n\n<Document>\n\n<Style id=\"icon-pushpin-blue\">\n      <IconStyle>\n        <scale>1</scale>\n        <Icon>\n          <href>https://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href>\n        </Icon>\n      </IconStyle>\n</Style>\n\n\n<Placemark>\n\n    <styleUrl></styleUrl>\n\n    <name></name>\n\n    <Point>\n\n        <coordinates></coordinates>\n\n    </Point>\n\n</Placemark>\n\n</Document>\n\n</kml>",
+        "output": "str",
+        "x": 1020,
+        "y": 320,
+        "wires": [
+            [
+                "126258c7c0cedc12"
+            ]
+        ]
+    },
+    {
+        "id": "126258c7c0cedc12",
+        "type": "xml",
+        "z": "60fff77379400453",
+        "name": "",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 1210,
+        "y": 320,
+        "wires": [
+            [
+                "2a8f5ff2e0c6249e"
+            ]
+        ]
+    },
+    {
+        "id": "60dfe0c528cad59e",
+        "type": "function",
+        "z": "60fff77379400453",
+        "name": "sort devices",
+        "func": "var newMsg;\nfor (var i = 0; i < msg.payload.length; i++) {\n    newMsg = { payload: msg.payload[i] };\n    node.send(newMsg);\n};\n//return;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 240,
+        "wires": [
+            [
+                "7a746e84431209e7",
+                "df5b4fa2c94a8db8"
+            ]
+        ]
+    },
+    {
+        "id": "7a746e84431209e7",
+        "type": "function",
+        "z": "60fff77379400453",
+        "name": "create placemark",
+        "func": "var name = String(msg.payload.entity_id);\nvar lat = String(msg.payload.attributes.latitude);\nvar lon = String(msg.payload.attributes.longitude);\nvar coordinates = lon + \",\" + lat + \",0\";\nmsg.payload = {\n    \"styleUrl\": [\"icon-pushpin-blue\"],\n    \"name\": [\"\"+ name +\"\"],\n    \"Point\": [{\n        \"coordinates\": [\"\"+ coordinates +\"\"]\n    }]\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 240,
+        "wires": [
+            [
+                "37d47161be6b4212"
+            ]
+        ]
+    },
+    {
+        "id": "37d47161be6b4212",
+        "type": "join",
+        "z": "60fff77379400453",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "payload",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "1",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1210,
+        "y": 240,
+        "wires": [
+            [
+                "2a8f5ff2e0c6249e"
+            ]
+        ]
+    },
+    {
+        "id": "e508ca6b59227446",
+        "type": "change",
+        "z": "60fff77379400453",
+        "name": "add entity to kml",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload[1]",
+                "pt": "msg",
+                "to": "payload[0].kml.Document[0].Placemark",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1570,
+        "y": 320,
+        "wires": [
+            [
+                "8573bf8caef98956",
+                "9a57ba2e4e2ec74b"
+            ]
+        ]
+    },
+    {
+        "id": "9001596cbada7249",
+        "type": "http response",
+        "z": "60fff77379400453",
+        "name": "host kml",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/vnd.google-earth.kml+xml"
+        },
+        "x": 2240,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "9b0fdb9731277adc",
+        "type": "xml",
+        "z": "60fff77379400453",
+        "name": "",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 1950,
+        "y": 320,
+        "wires": [
+            [
+                "907f3e200cb3ad03",
+                "9001596cbada7249"
+            ]
+        ]
+    },
+    {
+        "id": "a524822db4901f29",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug payload",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1960,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "907f3e200cb3ad03",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug xml",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2090,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "8573bf8caef98956",
+        "type": "change",
+        "z": "60fff77379400453",
+        "name": "format payload",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload[0]",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1780,
+        "y": 320,
+        "wires": [
+            [
+                "9b0fdb9731277adc",
+                "a524822db4901f29"
+            ]
+        ]
+    },
+    {
+        "id": "9a57ba2e4e2ec74b",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug kml",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1750,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "97fa85ec3550632f",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug join",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1530,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7ded90ff64038547",
+        "type": "debug",
+        "z": "60fff77379400453",
+        "name": "debug json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ae3acc6b51716f94",
+        "type": "comment",
+        "z": "60fff77379400453",
+        "name": "add server ip and token",
+        "info": "",
+        "x": 380,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "31909b183e05cbb9",
+        "type": "comment",
+        "z": "60fff77379400453",
+        "name": "homeassistantKmlFlow",
+        "info": "",
+        "x": 220,
+        "y": 120,
+        "wires": []
+    }
+]
