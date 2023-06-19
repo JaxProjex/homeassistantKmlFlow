@@ -1,2 +1,2 @@
 # homeassistantKmlFlow
-node red flow to create kml network link of home assistant entity locations
+Node-Red Flow to create a KML Network Link of Home Assistant Entity locations.
