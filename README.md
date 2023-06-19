@@ -36,9 +36,9 @@ ALTERNATIVELY..
 
 GETTING HOME ASSISTANTS API ACCESS TOKEN:
 
--In HomeAssistant: scroll down and click on your profile > scroll down to "Long-Lived Access Tokens > click on "CREATE TOKEN" > give your token a name > copy your access token
+-In HomeAssistant: scroll down and click on your profile > scroll down to "Long-Lived Access Tokens" > click on "CREATE TOKEN" > give your token a name > copy your access token
 
--In Node-Red: go to "homeassistantKmlFlow" > click on "http req" node > check mark "Use authentication > Type: bearer authentication > Token: *paste your access token here
+-In Node-Red: go to "homeassistantKmlFlow" flow > click on "http req" node > check mark "Use authentication" > Type: bearer authentication > Token: *paste your access token here
 
 ----------------------------------------------
 
