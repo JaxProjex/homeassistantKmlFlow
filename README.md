@@ -18,7 +18,7 @@ SETUP NODE-RED:
 
 -https://nodered.org/docs/getting-started/
 
--options include installing node-red on your local PC, a Raspberry Pi or similar single board computer or mini PC, deploying node-red on a cloud server or virtual private server (VPS), Docker Container, or local virtual environment. After installing node-red you should be able to go to the node-red dashboard at http://*nodeRedIPaddress:1880 you may have to open appropriate ports (1880) to allow devices to access the node-red dashboard.
+-options include installing node-red on your local PC, a Raspberry Pi or similar single board computer or mini PC, deploying node-red on a cloud server or virtual private server (VPS), Docker Container, or local virtual environment. After installing node-red you should be able to go to the node-red dashboard at http://node-red-ip-address:1880 you may have to open appropriate ports (1880) to allow devices to access the node-red dashboard.
 
 ----------------------------------------------
 
@@ -45,4 +45,4 @@ GETTING HOME ASSISTANTS API ACCESS TOKEN:
 
 ACCESSING THE KML NETWORK LINK:
 
--the default kml network link for the "homeassistantKmlFlow" is http://*nodeRedIPaddress:1880/homeassistant.kml
+-the default kml network link for the "homeassistantKmlFlow" is http://node-red-ip-address:1880/homeassistant.kml
